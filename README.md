@@ -32,6 +32,7 @@ uvicorn src.app:app --reload --port 8080
 - Firestore (native) enabled in GCP project
 - Set `GOOGLE_APPLICATION_CREDENTIALS` or use Workload Identity on Cloud Run
 - Schema: `docs/firestore-schema.md`
+- Seed workflow: `.github/workflows/seed-firestore.yml`
 
 ## OpenAPI Spec
 See `docs/openapi.yaml`.
