@@ -83,6 +83,21 @@ paths:
         '200':
           description: iCal file
 
+  /notifications/whatsapp:
+    post:
+      summary: Send WhatsApp notification (via provider)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhatsAppMessage'
+      responses:
+        '200':
+          description: Sent
+        '400':
+          description: Missing params
+
 components:
   schemas:
     PlanRequest:
@@ -148,3 +163,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Block'
+
+    WhatsAppMessage:
+      type: object
+      required: [to, body]
+      properties:
+        to:
+          type: string
+          description: WhatsApp number (E.164)
+          example: "+31612345678"
+        body:
+          type: string
+          example: "Je weekplanning is bijgewerkt."

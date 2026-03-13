@@ -22,6 +22,11 @@ class PlanResponse(BaseModel):
     blocks: list[Block]
 
 
+class WhatsAppMessage(BaseModel):
+    to: str
+    body: str
+
+
 @app.get("/health")
 def health():
     return {"ok": True}
@@ -30,3 +35,9 @@ def health():
 @app.post("/plan/build", response_model=PlanResponse)
 def build_plan(payload: PlanRequest):
     return PlanResponse(generatedAt=datetime.utcnow(), blocks=payload.fixedBlocks)
+
+
+@app.post("/notifications/whatsapp")
+def send_whatsapp(payload: WhatsAppMessage):
+    # Placeholder: integrate Twilio/MessageBird here.
+    return {"sent": True, "to": payload.to}
