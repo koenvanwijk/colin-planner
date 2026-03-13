@@ -24,6 +24,16 @@ pip install -r requirements.txt
 uvicorn src.app:app --reload --port 8080
 ```
 
+## Example curl
+```bash
+curl http://127.0.0.1:8080/health
+curl "http://127.0.0.1:8080/sources/magister/rooster?dateFrom=2026-03-17&dateTill=2026-03-24"
+curl http://127.0.0.1:8080/sources/voetbal/events
+curl -X POST http://127.0.0.1:8080/plan/export/ical \
+  -H 'Content-Type: application/json' \
+  -d '{"generatedAt":"2026-03-13T00:00:00Z","blocks":[]}'
+```
+
 ## Cloud
 - Deployed on Cloud Run
 - Use env vars for tokens (no secrets in git)
