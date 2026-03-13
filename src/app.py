@@ -1,5 +1,5 @@
 """Colin Planner MVP service (placeholder)."""
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from typing import Optional, List, Dict, Any
 
 from fastapi import FastAPI, Query, Response
@@ -15,10 +15,14 @@ class Block(BaseModel):
     source: Optional[str] = "manual"
 
 
+class HealthResponse(BaseModel):
+    ok: bool
+
+
 class MagisterOptions(BaseModel):
     enabled: Optional[bool] = True
-    dateFrom: Optional[str] = None
-    dateTill: Optional[str] = None
+    dateFrom: Optional[date] = None
+    dateTill: Optional[date] = None
 
 
 class VoetbalOptions(BaseModel):
@@ -43,37 +47,55 @@ class PlanResponse(BaseModel):
     blocks: List[Block]
 
 
+class MagisterRoosterResponse(BaseModel):
+    source: str
+    dateFrom: date
+    dateTill: date
+    items: List[Dict[str, Any]]
+    note: Optional[str] = None
+
+
+class VoetbalEventsResponse(BaseModel):
+    source: str
+    items: List[Dict[str, Any]]
+    note: Optional[str] = None
+
+
 class WhatsAppMessage(BaseModel):
     to: str
     body: str
 
 
-@app.get("/health")
+class WhatsAppResponse(BaseModel):
+    sent: bool
+
+
+@app.get("/health", response_model=HealthResponse)
 def health():
     return {"ok": True}
 
 
-@app.get("/sources/magister/rooster")
+@app.get("/sources/magister/rooster", response_model=MagisterRoosterResponse)
 def magister_rooster(
-    dateFrom: str = Query(..., description="YYYY-MM-DD"),
-    dateTill: str = Query(..., description="YYYY-MM-DD"),
-) -> Dict[str, Any]:
-    return {
-        "source": "magister",
-        "dateFrom": dateFrom,
-        "dateTill": dateTill,
-        "items": [],
-        "note": "placeholder response; integration not yet wired",
-    }
+    dateFrom: date = Query(..., description="YYYY-MM-DD"),
+    dateTill: date = Query(..., description="YYYY-MM-DD"),
+) -> MagisterRoosterResponse:
+    return MagisterRoosterResponse(
+        source="magister",
+        dateFrom=dateFrom,
+        dateTill=dateTill,
+        items=[],
+        note="placeholder response; integration not yet wired",
+    )
 
 
-@app.get("/sources/voetbal/events")
-def voetbal_events() -> Dict[str, Any]:
-    return {
-        "source": "voetbal.nl",
-        "items": [],
-        "note": "placeholder response; integration not yet wired",
-    }
+@app.get("/sources/voetbal/events", response_model=VoetbalEventsResponse)
+def voetbal_events() -> VoetbalEventsResponse:
+    return VoetbalEventsResponse(
+        source="voetbal.nl",
+        items=[],
+        note="placeholder response; integration not yet wired",
+    )
 
 
 @app.post("/plan/build", response_model=PlanResponse)
@@ -98,7 +120,7 @@ def export_ical(payload: PlanResponse):
     return Response(content=ical, media_type="text/calendar")
 
 
-@app.post("/notifications/whatsapp")
+@app.post("/notifications/whatsapp", response_model=WhatsAppResponse)
 def send_whatsapp(payload: WhatsAppMessage):
     # Placeholder: integrate Twilio/MessageBird here.
-    return {"sent": True, "to": payload.to}
+    return {"sent": True}
