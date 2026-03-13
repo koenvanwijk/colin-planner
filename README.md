@@ -25,8 +25,12 @@ uvicorn src.app:app --reload --port 8080
 ```
 
 ## Cloud
-- Works on Render/Fly/VM
+- Deployed on Cloud Run
 - Use env vars for tokens (no secrets in git)
+
+## Firebase / Firestore
+- Firestore (native) enabled in GCP project
+- Set `GOOGLE_APPLICATION_CREDENTIALS` or use Workload Identity on Cloud Run
 
 ## OpenAPI Spec
 See `docs/openapi.yaml`.
