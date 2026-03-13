@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: Colin Planner API
+  version: 0.1.0
+  description: |
+    API for building a weekly plan for a student by combining data sources
+    (Magister, voetbal.nl, manual inputs) and producing schedule outputs.
+
+    ### Conditions / Terms
+    - This API handles sensitive data (school schedule, grades, personal routines).
+    - Do **not** share credentials in chat or logs.
+    - Use read-only access wherever possible.
+    - Respect platform ToS (Magister/voetbal.nl/WhatsApp).
+    - Store tokens in environment variables/secrets, never in git.
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+
+  /sources/magister/rooster:
+    get:
+      summary: Fetch schedule from Magister (best-effort)
+      parameters:
+        - in: query
+          name: dateFrom
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: dateTill
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Rooster data
+        '400':
+          description: Missing params
+
+  /sources/voetbal/events:
+    get:
+      summary: Fetch voetbal.nl events (training/matches)
+      responses:
+        '200':
+          description: Events data
+
+  /plan/build:
+    post:
+      summary: Build a weekly plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanRequest'
+      responses:
+        '200':
+          description: Generated plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanResponse'
+
+  /plan/export/ical:
+    post:
+      summary: Export plan to iCal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanResponse'
+      responses:
+        '200':
+          description: iCal file
+
+components:
+  schemas:
+    PlanRequest:
+      type: object
+      required: [fixedBlocks]
+      properties:
+        fixedBlocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Block'
+        magister:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            dateFrom:
+              type: string
+              format: date
+            dateTill:
+              type: string
+              format: date
+        voetbal:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+        preferences:
+          type: object
+          properties:
+            sleepStart:
+              type: string
+              example: "23:30"
+            sleepEnd:
+              type: string
+              example: "07:00"
+            maxStudyBlocksPerDay:
+              type: integer
+              example: 2
+
+    Block:
+      type: object
+      required: [title, start, end]
+      properties:
+        title:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        source:
+          type: string
+          example: manual|magister|voetbal
+
+    PlanResponse:
+      type: object
+      properties:
+        generatedAt:
+          type: string
+          format: date-time
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Block'
