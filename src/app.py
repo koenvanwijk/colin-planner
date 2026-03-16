@@ -95,12 +95,17 @@ def magister_rooster(
     dateFrom: date = Query(..., description="YYYY-MM-DD"),
     dateTill: date = Query(..., description="YYYY-MM-DD"),
 ) -> MagisterRoosterResponse:
+    client = get_magister_client()
+    if not client:
+        raise HTTPException(status_code=400, detail="Magister env not configured")
+    raw = client.roster(dateFrom, dateTill)
+    items = raw.get("Items") or raw.get("items") or []
     return MagisterRoosterResponse(
         source="magister",
         dateFrom=dateFrom,
         dateTill=dateTill,
-        items=[],
-        note="placeholder response; integration not yet wired",
+        items=items,
+        note=None,
     )
 
 
