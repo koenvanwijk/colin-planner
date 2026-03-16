@@ -56,5 +56,9 @@ MAGISTER_TOKEN=...
 MAGISTER_PERSON_ID=32846
 ```
 
+## Voetbal.nl / vvdbs.nl helpers (best-effort)
+- `scripts/fetch_voetbal_programma.py` (filtert vvdbs.nl MEC events op teamnaam)
+  - Env: `TEAM_QUERY` (default: DBS JO16-2), `VVDBS_BASE` (default: https://vvdbs.nl)
+
 ## OpenAPI Spec
 See `docs/openapi.yaml`.
