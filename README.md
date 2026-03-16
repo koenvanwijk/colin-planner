@@ -44,5 +44,8 @@ curl -X POST http://127.0.0.1:8080/plan/export/ical \
 - Schema: `docs/firestore-schema.md`
 - Seed workflow: `.github/workflows/seed-firestore.yml`
 
+## Magister helpers
+- `scripts/fetch_huiswerk_7d.sh` (huiswerk/inhoud uit afspraken)
+
 ## OpenAPI Spec
 See `docs/openapi.yaml`.
