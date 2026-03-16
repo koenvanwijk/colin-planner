@@ -43,6 +43,7 @@ curl -X POST http://127.0.0.1:8080/plan/export/ical \
 - Set `GOOGLE_APPLICATION_CREDENTIALS` or use Workload Identity on Cloud Run
 - Schema: `docs/firestore-schema.md`
 - Seed workflow: `.github/workflows/seed-firestore.yml`
+- Deploy workflow: `.github/workflows/deploy-cloudrun.yml`
 
 ## Magister helpers
 - `scripts/fetch_huiswerk_7d.sh` (huiswerk/inhoud uit afspraken)
