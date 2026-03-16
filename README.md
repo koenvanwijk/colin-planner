@@ -47,5 +47,13 @@ curl -X POST http://127.0.0.1:8080/plan/export/ical \
 ## Magister helpers
 - `scripts/fetch_huiswerk_7d.sh` (huiswerk/inhoud uit afspraken)
 
+### Magister API env
+Set in Cloud Run / local:
+```
+MAGISTER_TENANT=vobo
+MAGISTER_TOKEN=...
+MAGISTER_PERSON_ID=32846
+```
+
 ## OpenAPI Spec
 See `docs/openapi.yaml`.

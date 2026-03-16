@@ -1,11 +1,26 @@
 """Colin Planner MVP service (placeholder)."""
 from datetime import datetime, timezone, date
 from typing import Optional, List, Dict, Any
+import os
 
-from fastapi import FastAPI, Query, Response
+from fastapi import FastAPI, Query, Response, HTTPException
 from pydantic import BaseModel
 
+from .magister_adapter import MagisterClient, MagisterConfig
+
 app = FastAPI(title="Colin Planner")
+
+
+def get_magister_client() -> Optional[MagisterClient]:
+    token = os.getenv("MAGISTER_TOKEN")
+    tenant = os.getenv("MAGISTER_TENANT")
+    person_id = os.getenv("MAGISTER_PERSON_ID")
+    if not token or not tenant or not person_id:
+        return None
+    try:
+        return MagisterClient(MagisterConfig(tenant=tenant, token=token, person_id=int(person_id)))
+    except Exception:
+        return None
 
 
 class Block(BaseModel):

@@ -26,7 +26,7 @@ paths:
 
   /sources/magister/rooster:
     get:
-      summary: Fetch schedule from Magister (best-effort)
+      summary: Fetch schedule from Magister (token-based)
       parameters:
         - in: query
           name: dateFrom
@@ -44,7 +44,7 @@ paths:
         '200':
           description: Rooster data
         '400':
-          description: Missing params
+          description: Missing params or Magister env not configured
 
   /sources/voetbal/events:
     get:
