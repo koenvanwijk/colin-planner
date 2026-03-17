@@ -65,5 +65,9 @@ MAGISTER_PERSON_ID=32846
   - Output: `knvb_speeldagenkalender_zuid_2025_2026.pdf/.txt/.json`
   - Requires `pdftotext` (poppler) for text extraction
 
+## Heerbeeck vakanties
+- `scripts/fetch_heerbeeck_vakanties.py`
+  - Output: `data/heerbeeck_vakanties_2025_2026.json`
+
 ## OpenAPI Spec
 See `docs/openapi.yaml`.

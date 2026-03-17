@@ -1,0 +1,43 @@
+{
+  "source": "https://heerbeeck.nl/onze-school/vakantierooster/",
+  "school_year": "2025-2026",
+  "fetched_at": "2026-03-17T10:00:30.920344+00:00",
+  "items": [
+    {
+      "name": "Herfstvakantie",
+      "date": "maandag 13 oktober tot en met vrijdag 17 oktober 2025"
+    },
+    {
+      "name": "Kerstvakantie",
+      "date": "maandag 22 december 2025 tot en met vrijdag 2 januari 2026"
+    },
+    {
+      "name": "Carnavalsvakantie",
+      "date": "maandag 16 februari tot en met vrijdag 20 februari 2026"
+    },
+    {
+      "name": "Tweede paasdag",
+      "date": "maandag 6 april 2026"
+    },
+    {
+      "name": "Meivakantie",
+      "date": "maandag 20 april tot en met vrijdag 1 mei 2026"
+    },
+    {
+      "name": "Bevrijdingsdag",
+      "date": "dinsdag 5 mei 2026"
+    },
+    {
+      "name": "Hemelvaart",
+      "date": "donderdag 14 mei, leerlingen ook vrij&nbsp;op vrijdag 15 mei 2026"
+    },
+    {
+      "name": "Tweede pinksterdag",
+      "date": "maandag 25 mei 2026"
+    },
+    {
+      "name": "Zomervakantie",
+      "date": "maandag 13 juli tot en met vrijdag 21 augustus 2026 Schooljaar 2026-2027"
+    }
+  ]
+}
