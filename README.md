@@ -68,6 +68,8 @@ MAGISTER_PERSON_ID=32846
 ## Heerbeeck vakanties
 - `scripts/fetch_heerbeeck_vakanties.py`
   - Output: `data/heerbeeck_vakanties_2025_2026.json`
+- `scripts/normalize_heerbeeck_vakanties.py`
+  - Output: `data/heerbeeck_vakanties_2025_2026_normalized.json`
 
 ## OpenAPI Spec
 See `docs/openapi.yaml`.
