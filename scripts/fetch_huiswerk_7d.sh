@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
+
 if ! command -v jq >/dev/null 2>&1; then
   echo "Error: jq is required (sudo apt install jq)" >&2
   exit 1
@@ -59,41 +63,15 @@ ROSTER_JSON="$(curl -fsS -G "$BASE_URL/api/rooster" \
   --data-urlencode "dateFrom=$DATE_FROM" \
   --data-urlencode "dateTill=$DATE_TILL")"
 
+ROSTER_FILE="/tmp/magister_roster_${DATE_FROM}_${DATE_TILL}.json"
+printf '%s' "$ROSTER_JSON" > "$ROSTER_FILE"
+
 OUT_FILE="huiswerk_${DATE_FROM}_to_${DATE_TILL}.json"
-python - <<'PY'
-import json, re, sys
-from datetime import datetime
+python - <<PY
+import json, re
+from pathlib import Path
 
-raw = json.loads(sys.stdin.read())
-items = raw.get('Items') or raw.get('items') or []
-
-out = []
-for it in items:
-    inhoud = (it.get('Inhoud') or '').strip()
-    opm = (it.get('Opmerking') or '').strip()
-    if not inhoud and not opm:
-        continue
-    text = inhoud or opm
-    # strip html
-    text = re.sub('<[^<]+?>', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    out.append({
-        'Start': it.get('Start') or it.get('start'),
-        'Einde': it.get('Einde') or it.get('end') or it.get('End'),
-        'Omschrijving': it.get('Omschrijving') or it.get('description') or it.get('Description'),
-        'Locatie': it.get('Lokatie') or it.get('location') or it.get('Location'),
-        'Tekst': text,
-    })
-
-print(json.dumps(out, ensure_ascii=False, indent=2))
-PY
-
-# shellcheck disable=SC2005
-echo "$(python - <<'PY'
-import json, re, sys
-from datetime import datetime
-
-raw = json.loads(sys.stdin.read())
+raw = json.loads(Path("$ROSTER_FILE").read_text())
 items = raw.get('Items') or raw.get('items') or []
 
 out = []
@@ -113,19 +91,49 @@ for it in items:
         'Tekst': text,
     })
 
-print(json.dumps(out, ensure_ascii=False, indent=2))
+Path("$OUT_FILE").write_text(json.dumps(out, ensure_ascii=False, indent=2))
 PY
-" > "$OUT_FILE"
+
+# lineage (sanitized raw roster)
+PYTHONPATH="$SCRIPT_DIR" python - <<PY
+import json, hashlib, os
+from pathlib import Path
+from lineage_utils import write_lineage, write_raw
+
+raw_path = Path("$ROSTER_FILE")
+obj = json.loads(raw_path.read_text())
+
+for item in obj.get('Items', []):
+    for k in ['Docenten','Groepen','Vakken','Links']:
+        if k in item:
+            item[k] = None
+
+sanitized = json.dumps(obj, ensure_ascii=False).encode('utf-8')
+raw_file = write_raw(Path("$OUT_FILE").stem + "_sanitized", "json", sanitized)
+
+base = os.environ.get("MAGISTER_BASE_URL", "http://127.0.0.1:5000")
+record = {
+    "dataset_id": Path("$OUT_FILE").stem,
+    "source_url": f"{base}/api/rooster",
+    "fetch_method": "magister-api",
+    "raw_artifact": str(raw_file),
+    "raw_checksum": hashlib.sha256(sanitized).hexdigest(),
+    "output_files": [str(Path("$OUT_FILE"))],
+    "parser_version": "1.0",
+}
+write_lineage(record)
+PY
+
 
 echo "[3/3] Done. Saved homework to: $OUT_FILE"
 
 echo
 
 echo "Compact preview:"
-python - <<'PY'
+python - <<PY
 import json
 from pathlib import Path
-p = Path('$OUT_FILE')
+p = Path("$OUT_FILE")
 items = json.loads(p.read_text())
 for it in items[:10]:
     print(f"{it['Start']} | {it['Omschrijving']} | {it['Tekst'][:80]}")
