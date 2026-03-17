@@ -60,5 +60,10 @@ MAGISTER_PERSON_ID=32846
 - `scripts/fetch_voetbal_programma.py` (filtert vvdbs.nl MEC events op teamnaam)
   - Env: `TEAM_QUERY` (default: DBS JO16-2), `VVDBS_BASE` (default: https://vvdbs.nl)
 
+## KNVB seizoenskalender (Zuid)
+- `scripts/fetch_knvb_seizoenskalender.py` (download PDF + extract date ranges)
+  - Output: `knvb_speeldagenkalender_zuid_2025_2026.pdf/.txt/.json`
+  - Requires `pdftotext` (poppler) for text extraction
+
 ## OpenAPI Spec
 See `docs/openapi.yaml`.
