@@ -96,17 +96,67 @@ PY
 
 # lineage (sanitized raw roster)
 PYTHONPATH="$SCRIPT_DIR" python - <<PY
-import json, hashlib, os
+import json, hashlib, os, re
 from pathlib import Path
 from lineage_utils import write_lineage, write_raw
 
 raw_path = Path("$ROSTER_FILE")
 obj = json.loads(raw_path.read_text())
 
-for item in obj.get('Items', []):
-    for k in ['Docenten','Groepen','Vakken','Links']:
-        if k in item:
-            item[k] = None
+PII_KEYS = {
+    "docenten",
+    "docent",
+    "docentid",
+    "docentids",
+    "docentnaam",
+    "docentnaamvolledig",
+    "docentafkorting",
+    "docentinitialen",
+    "leerling",
+    "leerlingen",
+    "leerlingid",
+    "leerlingids",
+    "student",
+    "students",
+    "studentid",
+    "personid",
+    "persoonid",
+    "email",
+    "e-mail",
+    "telefoon",
+    "mobiel",
+    "adres",
+    "postcode",
+    "geboortedatum",
+    "geboortedate",
+    "geboortedat",
+    "geboorte",
+    "links",
+    "groepen",
+    "vakken",
+}
+
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+
+
+def scrub(value):
+    if isinstance(value, dict):
+        cleaned = {}
+        for k, v in value.items():
+            if k.lower() in PII_KEYS:
+                cleaned[k] = None
+            else:
+                cleaned[k] = scrub(v)
+        return cleaned
+    if isinstance(value, list):
+        return [scrub(v) for v in value]
+    if isinstance(value, str):
+        if EMAIL_RE.search(value):
+            return "[redacted]"
+        return value
+    return value
+
+obj = scrub(obj)
 
 sanitized = json.dumps(obj, ensure_ascii=False).encode('utf-8')
 raw_file = write_raw(Path("$OUT_FILE").stem + "_sanitized", "json", sanitized)
