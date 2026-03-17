@@ -7,8 +7,12 @@ import re
 from datetime import datetime, date
 from pathlib import Path
 
+from lineage_utils import write_lineage, build_base_record, sha256_file
+
 SRC = Path("data/heerbeeck_vakanties_2025_2026.json")
 OUT = Path("data/heerbeeck_vakanties_2025_2026_normalized.json")
+DATASET_ID = "heerbeeck_vakanties_2025_2026_normalized"
+PARSER_VERSION = "1.0"
 
 MONTHS = {
     "januari": 1,
@@ -85,6 +89,18 @@ def main():
         out_items.append({"name": name, "start": single.isoformat() if single else None, "end": single.isoformat() if single else None, "raw": raw})
 
     OUT.write_text(json.dumps({"source": src.get("source"), "school_year": src.get("school_year"), "items": out_items}, ensure_ascii=False, indent=2))
+
+    record = build_base_record(
+        dataset_id=DATASET_ID,
+        source_url=src.get("source"),
+        fetch_method="transform",
+        output_files=[str(OUT)],
+        raw_file=str(SRC),
+        raw_checksum=sha256_file(SRC),
+        parser_version=PARSER_VERSION,
+    )
+    write_lineage(record)
+
     print(f"Saved {OUT}")
 
 

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LineageRecord",
+  "type": "object",
+  "required": ["dataset_id", "source_url", "fetch_method", "output_files", "parser_version", "recorded_at"],
+  "properties": {
+    "dataset_id": {"type": "string"},
+    "source_url": {"type": "string"},
+    "fetch_method": {"type": "string"},
+    "raw_artifact": {"type": ["string", "null"]},
+    "raw_checksum": {"type": ["string", "null"]},
+    "output_files": {"type": "array", "items": {"type": "string"}},
+    "parser_version": {"type": "string"},
+    "recorded_at": {"type": "string"}
+  }
+}

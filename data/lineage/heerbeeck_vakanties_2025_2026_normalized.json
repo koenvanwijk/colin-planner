@@ -1,0 +1,12 @@
+{
+  "dataset_id": "heerbeeck_vakanties_2025_2026_normalized",
+  "source_url": "https://heerbeeck.nl/onze-school/vakantierooster/",
+  "fetch_method": "transform",
+  "raw_artifact": "data/heerbeeck_vakanties_2025_2026.json",
+  "raw_checksum": "e996a2c0c5a09d14859698dd3133826d3fdb86fc1d5dca4a359c843fbf371808",
+  "output_files": [
+    "data/heerbeeck_vakanties_2025_2026_normalized.json"
+  ],
+  "parser_version": "1.0",
+  "recorded_at": "2026-03-17T10:18:28.040933+00:00"
+}

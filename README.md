@@ -64,12 +64,20 @@ MAGISTER_PERSON_ID=32846
 - `scripts/fetch_knvb_seizoenskalender.py` (download PDF + extract date ranges)
   - Output: `knvb_speeldagenkalender_zuid_2025_2026.pdf/.txt/.json`
   - Requires `pdftotext` (poppler) for text extraction
+  - Lineage: `data/lineage/knvb_speeldagenkalender_zuid_2025_2026.json`
 
 ## Heerbeeck vakanties
 - `scripts/fetch_heerbeeck_vakanties.py`
   - Output: `data/heerbeeck_vakanties_2025_2026.json`
+  - Lineage: `data/lineage/heerbeeck_vakanties_2025_2026.json`
 - `scripts/normalize_heerbeeck_vakanties.py`
   - Output: `data/heerbeeck_vakanties_2025_2026_normalized.json`
+  - Lineage: `data/lineage/heerbeeck_vakanties_2025_2026_normalized.json`
+
+## Lineage / provenance
+- Schema: `data/lineage/schema.json`
+- Raw artifacts: `data/raw/`
+- Records: `data/lineage/*.json`
 
 ## OpenAPI Spec
 See `docs/openapi.yaml`.

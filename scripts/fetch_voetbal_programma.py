@@ -13,8 +13,12 @@ from html import unescape
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
+from lineage_utils import write_lineage, build_base_record
+
 BASE = os.getenv("VVDBS_BASE", "https://vvdbs.nl")
 TEAM = os.getenv("TEAM_QUERY", "DBS JO16-2")
+DATASET_ID = "vvdbs_programma_filtered"
+PARSER_VERSION = "1.0"
 
 
 def strip_html(html: str) -> str:
@@ -58,6 +62,18 @@ def main():
         )
 
     print(json.dumps(results, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
+}",
+        fetch_method="wp-json/mec-events search",
+        output_files=[],
+        raw_file=None,
+        raw_checksum=None,
+        parser_version=PARSER_VERSION,
+    )
+    write_lineage(record)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,14 @@
+{
+  "dataset_id": "knvb_speeldagenkalender_zuid_2025_2026",
+  "source_url": "https://www.knvb.nl/downloads/sites/bestand/knvb/29145/speeldagenkalender-veld-zuid-2025-2026",
+  "fetch_method": "pdf_download+pdftotext",
+  "raw_artifact": "knvb_speeldagenkalender_zuid_2025_2026.pdf",
+  "raw_checksum": "d80b2956c386c4000ad44d277e5762e389c10c4e7da5ffde1bd6bb794a91d941",
+  "output_files": [
+    "knvb_speeldagenkalender_zuid_2025_2026.pdf",
+    "knvb_speeldagenkalender_zuid_2025_2026.txt",
+    "knvb_speeldagenkalender_zuid_2025_2026.json"
+  ],
+  "parser_version": "1.0",
+  "recorded_at": "2026-03-17T10:19:06.634676+00:00"
+}

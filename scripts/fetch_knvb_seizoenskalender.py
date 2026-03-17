@@ -13,11 +13,15 @@ import subprocess
 from pathlib import Path
 from urllib.request import urlretrieve
 
+from lineage_utils import write_lineage, build_base_record, sha256_file
+
 PDF_URL = "https://www.knvb.nl/downloads/sites/bestand/knvb/29145/speeldagenkalender-veld-zuid-2025-2026"
 OUT_DIR = Path(os.getenv("OUT_DIR", "."))
 PDF_PATH = OUT_DIR / "knvb_speeldagenkalender_zuid_2025_2026.pdf"
 TXT_PATH = OUT_DIR / "knvb_speeldagenkalender_zuid_2025_2026.txt"
 JSON_PATH = OUT_DIR / "knvb_speeldagenkalender_zuid_2025_2026.json"
+DATASET_ID = "knvb_speeldagenkalender_zuid_2025_2026"
+PARSER_VERSION = "1.0"
 
 MONTHS = {
     "jan": 1,
@@ -79,6 +83,17 @@ def main():
 
     dates = parse_dates(text)
     JSON_PATH.write_text(json.dumps(dates, ensure_ascii=False, indent=2))
+
+    record = build_base_record(
+        dataset_id=DATASET_ID,
+        source_url=PDF_URL,
+        fetch_method="pdf_download+pdftotext",
+        output_files=[str(PDF_PATH), str(TXT_PATH), str(JSON_PATH)],
+        raw_file=str(PDF_PATH),
+        raw_checksum=sha256_file(PDF_PATH),
+        parser_version=PARSER_VERSION,
+    )
+    write_lineage(record)
 
     print(f"Saved PDF: {PDF_PATH}")
     print(f"Saved TXT: {TXT_PATH}")
